@@ -1,0 +1,228 @@
+import React, { useState } from 'react';
+import ModalComponent from './ModalComponent';
+
+const ParentComponent = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    age: '',
+    gender: 'Male'
+  });
+
+  const [formDataList, setFormDataList] = useState([]);
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isTableVisible, setIsTableVisible] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormDataList([...formDataList, formData]);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      age: '',
+      gender: 'Male'
+    });
+    setIsTableVisible(true);
+  };
+
+  const toggleForm = () => {
+    setIsFormVisible(!isFormVisible);
+    setIsTableVisible(false);
+  };
+
+  return (
+    <div>
+      <button onClick={toggleForm}>{isFormVisible ? 'Hide Form' : 'Show Form'}</button>
+
+      {isFormVisible && (
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="age">Age:</label>
+            <input type="number" id="age" name="age" value={formData.age} onChange={handleInputChange} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="gender">Gender:</label>
+            <select id="gender" name="gender" value={formData.gender} onChange={handleInputChange}>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      )}
+
+      {isTableVisible && (
+        <div>
+          <h2>Form Data Table</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+              </tr>
+            </thead>
+            <tbody>
+              {formDataList.map((data, index) => (
+                <tr key={index}>
+                  <td>{data.firstName}</td>
+                  <td>{data.lastName}</td>
+                  <td>{data.age}</td>
+                  <td>{data.gender}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <ModalComponent isOpen={isTableVisible} closeModal={() => setIsTableVisible(false)} formDataList={formDataList} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+
+
+
+
+// button.js
+import React from 'react';
+
+const ModalComponent = ({ isOpen, closeModal, formDataList }) => {
+  return (
+    <div className={`modal ${isOpen ? 'modal-open' : 'modal-closed'}`}>
+      <div className="modal-content">
+        <span className="close" onClick={closeModal}>
+          &times;
+        </span>
+        <h2>Form Data Table</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+            </tr>
+          </thead>
+          <tbody>
+            {formDataList.map((data, index) => (
+              <tr key={index}>
+                <td>{data.firstName}</td>
+                <td>{data.lastName}</td>
+                <td>{data.age}</td>
+                <td>{data.gender}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default ModalComponent;
+
+//CSS
+/* Styles for Form */
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Styles for Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+/* Styles for Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
