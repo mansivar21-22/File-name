@@ -1,0 +1,68 @@
+// store.js
+import { createStore } from 'redux';
+import rootReducer from './reducers';
+
+const store = createStore(rootReducer);
+
+export default store;
+
+
+// actions.js
+export const addFormData = (formData) => {
+  return {
+    type: 'ADD_FORM_DATA',
+    payload: formData
+  };
+};
+
+export const deleteFormData = (formDataId) => {
+  return {
+    type: 'DELETE_FORM_DATA',
+    payload: formDataId
+  };
+};
+
+export const resetForm = () => {
+  return {
+    type: 'RESET_FORM'
+  };
+};
+
+
+
+// reducers.js
+const initialState = {
+  formDataList: []
+};
+
+const rootReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'ADD_FORM_DATA':
+      return {
+        ...state,
+        formDataList: [...state.formDataList, action.payload]
+      };
+
+    case 'DELETE_FORM_DATA':
+      return {
+        ...state,
+        formDataList: state.formDataList.filter(formData => formData.id !== action.payload)
+      };
+
+    case 'RESET_FORM':
+      return {
+        ...state,
+        formDataList: []
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default rootReducer;
+
+
+
+
+
