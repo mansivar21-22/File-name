@@ -1,0 +1,41 @@
+import React, { useEffect, useState } from "react";
+import "./style.component.css";
+
+function Pagination() {
+  const [data, setData] = useState([]);
+
+  const [currentPage, setcurrentPage] = useState(1);
+  const [itemsPerPage, setitemsPerPage] = useState(5);
+
+  const [pageNumberLimit, setpageNumberLimit] = useState(5);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+  const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
+  return (
+    <>
+    <h1> Pagination Component</h1> <br />
+  
+    </>
+  );
+}
+
+export default Pagination;
+
+
+
+
+useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/todos")
+      .then((response) => response.json())
+      .then((json) => setData(json));
+  }, []);
+
+  const displayData = (data) => {
+    return (
+      <ul>
+        {data.length > 0 &&
+          data.map((todo, index) => {
+            return <li key={index}>{todo.title}</li>;
+          })}
+      </ul>
+    );
+  };
