@@ -88,3 +88,63 @@ const DummyAPIComponent = () => {
 
 export default DummyAPIComponent;
 
+
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ReactPaginate from 'react-paginate';
+
+const DummyComponent = () => {
+  const pageSize = 10; // Number of items per page
+  const [currentPage, setCurrentPage] = useState(0);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from a dummy API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('your_dummy_api_url');
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handlePageChange = selectedPage => {
+    setCurrentPage(selectedPage.selected);
+  };
+
+  const renderDataForCurrentPage = () => {
+    const startIndex = currentPage * pageSize;
+    const endIndex = startIndex + pageSize;
+    return data.slice(startIndex, endIndex).map(item => (
+      <div key={item.id}>{item.name}</div>
+    ));
+  };
+
+  return (
+    <div>
+      {renderDataForCurrentPage()}
+      <ReactPaginate
+        previousLabel={'Previous'}
+        nextLabel={'Next'}
+        breakLabel={'...'}
+        pageCount={Math.ceil(data.length / pageSize)}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageChange}
+        containerClassName={'pagination'}
+        subContainerClassName={'pages pagination'}
+        activeClassName={'active'}
+      />
+    </div>
+  );
+};
+
+export default DummyComponent;
+
+
