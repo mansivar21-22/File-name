@@ -1,0 +1,111 @@
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+}
+
+
+
+public class ProductRepository
+{
+    private readonly List<Product> _products;
+
+    public ProductRepository()
+    {
+        _products = new List<Product>
+        {
+            new Product { Id = 1, Name = "Product 1", Price = 10.00m },
+            new Product { Id = 2, Name = "Product 2", Price = 20.00m },
+            new Product { Id = 3, Name = "Product 3", Price = 30.00m }
+        };
+    }
+
+    public IEnumerable<Product> GetAllProducts()
+    {
+        return _products;
+    }
+
+    public async Task InsertProduct(Product product)
+    {
+        // Insert the product into the database
+        _products.Add(product);
+    }
+}
+
+
+
+
+
+
+[Route("api/[controller]")]
+[ApiController]
+public class ProductsController : ControllerBase
+{
+    private readonly ProductRepository _productRepository;
+
+    public ProductsController(ProductRepository productRepository)
+    {
+        _productRepository = productRepository;
+    }
+
+    // GET api/products
+    [HttpGet]
+    public IEnumerable<Product> GetAllProducts()
+    {
+        return _productRepository.GetAllProducts();
+    }
+
+    // POST api/products
+    [HttpPost]
+    public async Task<IActionResult> PostProduct([FromBody] Product product)
+    {
+        if (product == null)
+        {
+            return BadRequest();
+        }
+
+        await _productRepository.InsertProduct(product);
+
+        return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+    }
+}
+
+
+
+
+
+
+public void ConfigureServices(IServiceCollection services)
+{
+    // ...
+
+    services.AddControllers();
+
+    // Add the product repository service
+    services.AddSingleton<ProductRepository>();
+}
+
+
+
+
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    // ...
+
+    app.UseRouting();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+}
+
+
+
+
+
+
+
+
