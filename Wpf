@@ -1,0 +1,65 @@
+<Window x:Class="YourNamespace.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Your Application" Height="350" Width="525">
+    <Grid>
+        <!-- Top-level navigation buttons -->
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button Content="SQL" Click="SQLButton_Click"/>
+            <Button Content="Result History" Click="ResultHistoryButton_Click"/>
+            <Button Content="Configuration" Click="ConfigurationButton_Click"/>
+            <Button Content="Git" Click="GitButton_Click"/>
+            <Button Content="Utility" Click="UtilityButton_Click"/>
+        </StackPanel>
+
+        <!-- Placeholder for dynamic content -->
+        <StackPanel x:Name="DynamicContentPanel" Margin="10">
+            <!-- Content for SQL -->
+            <Border x:Name="SQLPanel" Visibility="Collapsed">
+                <!-- SQL-specific content goes here -->
+                <StackPanel>
+                    <CheckBox Content="Development"/>
+                    <Button Content="Dev"/>
+                    <Button Content="Prod"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Content for Result History -->
+            <!-- Add similar Border and content for other buttons -->
+
+        </StackPanel>
+    </Grid>
+</Window>
+
+
+c#
+
+public partial class MainWindow : Window
+{
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
+
+    private void SQLButton_Click(object sender, RoutedEventArgs e)
+    {
+        TogglePanelVisibility(SQLPanel);
+    }
+
+    private void TogglePanelVisibility(UIElement panel)
+    {
+        // Hide all panels
+        foreach (var child in DynamicContentPanel.Children)
+        {
+            if (child is UIElement uiElement)
+            {
+                uiElement.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // Show the selected panel
+        panel.Visibility = Visibility.Visible;
+    }
+
+    // Handle clicks for other buttons similarly
+}
